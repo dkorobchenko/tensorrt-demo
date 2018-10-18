@@ -1,0 +1,28 @@
+version: '2.3'
+services:
+
+  trt-demo-tf:
+    build:
+      context: ./docker
+      dockerfile: tensorflow.Dockerfile
+    ports:
+     - "8881:8888"
+    volumes:
+     - .:/demo
+     - /imagenet/:/imagenet/
+    container_name: tensorflow
+    runtime: nvidia
+    command: /bin/bash /opt/run_jupyter.sh
+
+  trt-demo-trt:
+    build:
+      context: ./docker
+      dockerfile: tensorrt.Dockerfile
+    ports:
+     - "8882:8888"
+    volumes:
+     - .:/demo
+     - /imagenet/:/imagenet/
+    container_name: tensorrt
+    runtime: nvidia
+    command: /bin/bash /opt/run_jupyter.sh

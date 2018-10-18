@@ -89,5 +89,3 @@ def imagenet_data(data_root, sample_list_file, batch_size=1, crop_size=(256, 256
         crop_size=crop_size)
 
     return image, label, num_samples
-
-

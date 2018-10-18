@@ -3,7 +3,7 @@ Utility functions
 '''
 
 import numpy as np
-import scipy.misc
+from skimage.transform import resize
 
 __author__ = "Dmitry Korobchenko (dkorobchenko@nvidia.com)"
 
@@ -23,7 +23,8 @@ def resize_and_crop(img_in, crop_size):
     else:
         new_h = int(np.ceil(crop_size[1] * img.shape[0] / img.shape[1]))
         new_w = crop_size[1]
-    img = scipy.misc.imresize(img, (new_h, new_w), 'bilinear')
+
+    img = resize(img, (new_h, new_w), order=3, mode='reflect', anti_aliasing=True, preserve_range=True)
 
     offset = ((img.shape[0] - crop_size[0]) // 2,
               (img.shape[1] - crop_size[1]) // 2)

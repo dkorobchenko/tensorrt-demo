@@ -1,20 +1,90 @@
+
 # TensorRT Demo
 
-The demo shows how to build, train and test a conv-net using TensorFlow and then how to port it to TensorRT for fast inference.
+The demo shows how to build, train and test a ConvNet using TensorFlow and then how to port it to TensorRT for fast inference.
 
-## Tensorflow part
+There are two ways to perform the TensorRT optimization:
+ - Build a stand-alone TensorRT engine
+ - Use TensorRT+TensorFlow to build a new TF graph with optimized TRT-based subgraphs
 
-*Requirements:* TensorFlow 1.4 (https://www.tensorflow.org/)
+For each step there is a `py` script and a Jupyter Notebook `ipynb`
 
-[Tensorflow_train_model.ipynb](Tensorflow_train_model.ipynb) -> Build and train the network using Tensorflow
+Parameters, which could be adjusted, are marked with `# ADJUST` comment
 
-[Tensorflow_freeze_graph.ipynb](Tensorflow_freeze_graph.ipynb) -> Prepare the network for the inference procedure (mostly required for the further porting to TensorRT)
+## TensorFlow part
 
-[Tensorflow_inference.ipynb](Tensorflow_inference.ipynb) -> Inference by means of TensorFlow
+*Requirements:* It is recommended to run everything inside `tensorflow` docker container (see docker details below)
+
+### TensorFlow train
+
+Build and train a ConvNet using Tensorflow
+
+Jupyter version: `Tensorflow_train.ipynb`
+
+Python version: `tf_train.py`
+
+### TensorFlow graph freeze
+
+Prepare TF graph for the inference procedure (mostly required for the further porting to TensorRT)
+
+Jupyter version: `Tensorflow_freeze.ipynb`
+
+Python version: `tf_freeze.py`
+
+### TensorFlow inference
+
+Perform inference by means of TensorFlow. There are two modes: `TF` and `TRT`, which mean regular TF graph and TF graph with TRT optimizations correspondingly. The second will be available after the `TensorFlow optimize` step.
+
+Jupyter version: `Tensorflow_infer.ipynb`
+
+Python version: `tf_infer.py`
+
+### TensorFlow optimize
+
+Use TensorRT+TensorFlow to build a new TF graph with optimized TRT-based subgraphs
+
+Jupyter version: `Tensorflow_optimize.ipynb`
+
+Python version: `tf_optimize.py`
 
 ## TensorRT part
-*Requirements:* TensorRT 3.0 (https://developer.nvidia.com/tensorrt): TensorRT and uff python libs. Python installation packages could be found in the TensorRT archive.
 
-[TensorRT_build_engine.ipynb](TensorRT_build_engine.ipynb) -> Optimize frozen TF graph and prepare inference engine with TensorRT
+*Requirements:* It is recommended to run everything inside `tensorrt` docker container (see docker details below)
 
-[TensorRT_inference.ipynb](TensorRT_inference.ipynb) -> Inference by means of TensorRT
+### TensorRT optimize
+
+Optimize frozen TF graph and prepare a stand-alone TensorRT inference engine
+
+Jupyter version: `TensorRT_optimize.ipynb`
+
+Python version: `trt_optimize.py`
+
+### TensorRT inference
+
+Inference by means of TensorRT
+
+Jupyter version: `TensorRT_infer.ipynb`
+
+Python version: `trt_infer.py`
+
+## Docker
+
+To avoid problems with various versions of the frameworks, it is recommended to use docker containers.
+
+There are two containers with the following Dockerfiles:
+ - `tensorflow.Dockerfile` contains TensorFlow 1.10 built against CUDA 10. This container is recommended for all steps from `TensorFlow part`
+ - `tensorrt.Dockerfile` contains TensorRT 5.0. This container is recommended for all steps from `TensorRT part`
+
+ You can use either standard docker commands or `docker-compose`. Below is the way using standard commands.
+
+ To build docker containers use `docker_build.sh`
+
+ To run a docker container in bash mode (useful for python scripts) use `docker_run_bash.sh TF` or `docker_run_bash.sh TRT`
+
+ To run a docker container in jupyter mode (useful for jupyer notebooks) use `docker_run_jupyter.sh TF` or `docker_run_jupyter.sh TRT`
+
+ Jupyter notebook password is set in `.env` file
+
+ Jupyter notebook ports:
+ - `8881` for TensorFlow container
+ - `8882` for TensorRT container

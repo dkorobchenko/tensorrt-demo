@@ -9,6 +9,14 @@ import tensorflow.contrib.slim as slim
 
 __author__ = "Dmitry Korobchenko (dkorobchenko@nvidia.com)"
 
+def flatten(inputs):
+    '''
+    Safe flatten function
+    slim.flatten sometimes works improperly, depending on version and CHW/HWC layout
+    '''
+    shp = tf.shape(inputs)
+    return tf.reshape(inputs, (shp[0], shp[1] * shp[2] * shp[3]))
+
 def model(inputs, is_training, **kwargs):
     '''
     VGG-A + BatchNorm
@@ -37,7 +45,7 @@ def model(inputs, is_training, **kwargs):
             net = slim.conv2d(net, 512, [3, 3], scope='conv5_1')
             net = slim.conv2d(net, 512, [3, 3], scope='conv5_2')
             net = slim.max_pool2d(net, [2, 2], scope='pool5')
-            net = slim.flatten(net)
+            net = flatten(net)
             net = slim.fully_connected(net, 4096, scope='fc6')
             net = slim.dropout(net, 0.5, scope='dropout6', is_training=is_training)
             net = slim.fully_connected(net, 4096, scope='fc7')
@@ -45,5 +53,3 @@ def model(inputs, is_training, **kwargs):
             net = slim.fully_connected(net, 2, activation_fn=None, scope='fc8')
 
     return net
-
-
