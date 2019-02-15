@@ -88,3 +88,9 @@ There are two containers with the following Dockerfiles:
  Jupyter notebook ports:
  - `8881` for TensorFlow container
  - `8882` for TensorRT container
+ 
+ ## Training data
+
+The training is performed on the ImageNet dataset (ILSVRC2012, http://image-net.org). In particular, on the ImageNet subset "Tabby cat" and "Bernese mountain dog" (cats vs dogs).
+
+You can change `TRAIN_DATA_ROOT` and `TRAIN_LIST_FILE` variables according to your localtion of the ImageNet dataset, or create a symlink `/imagenet/` pointing to your location of the ImageNet.
